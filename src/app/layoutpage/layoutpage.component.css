@@ -1,0 +1,70 @@
+.sidebar-collapsed main {
+    transition: margin-left 0.3s ease;
+}
+
+.light-theme {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.dark-theme {
+    background-color: #121821;
+    color: #e0e0e0;
+}
+
+.dark-theme a {
+    color: #ff68a0;
+}
+
+main {
+    min-height: calc(100vh - 56px);
+    /* full height minus header */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+}
+
+main>* {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.layout-wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.layout-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+/* Optional: make sure footer doesn't collapse */
+app-footer {
+    flex-shrink: 0;
+}
+

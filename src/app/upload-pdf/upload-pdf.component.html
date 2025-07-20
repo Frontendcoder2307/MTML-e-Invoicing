@@ -1,0 +1,70 @@
+<!-- <div class="row mx-1">
+    <div class="col-12 ">
+        <div class="upload-container">
+            <h2>Upload PDF Files</h2>
+
+            <input type="file" class="form-control" accept=".pdf" (change)="onFilesSelected($event)" multiple  />
+
+            <button class="btn btn-outline-warning" [disabled]="!selectedFiles.length" (click)="uploadAll()">
+                Upload
+            </button>
+
+            <p *ngIf="uploadStatus">{{ uploadStatus }}</p>
+            <div class="mt-5">
+                <label>
+                    <i class="bi bi-upload"></i>
+                </label>
+
+            </div>
+        </div>
+    </div>
+
+</div> -->
+
+
+<div class="upload-container">
+    <div class="upload-box">
+        <!-- <img src="https://img.icons8.com/ios-filled/100/pdf.png" alt="PDF Icon" class="upload-image" /> -->
+         <label class="upload-image"><i class="bi bi-file-earmark-pdf-fill"></i></label>
+
+        <h2>Upload PDF Files</h2>
+
+            <div class="d-flex justify-content-center" *ngIf="showoptions" >
+                <select class="form-select mb-3" id="floatingSelect" aria-label="Floating label select example" [(ngModel)]="docType" (change)="removeFiles()" style="width: fit-content;">
+                    <option value='' selected>Select Document Type</option>
+                    <option value="recharge">Recharge</option>
+                    <option value="postpaid">Postpaid</option>
+                    <option value="invoice">Invoice</option>
+                    <option value="mobile">Mobile Sale</option>
+                </select>
+            </div>
+            
+        
+        
+        <label class="upload-label">
+            <input type="file" accept=".pdf" (change)="onFilesSelected($event)" multiple hidden />
+            <span class="btn btn-outline-warning" >Select PDF Files</span>
+        </label>
+        
+        <div *ngIf="selectedFiles.length > 0" class="file-list">
+            <div *ngFor="let file of selectedFiles; let i = index" class="file-item">
+                
+                <label>{{ file.name }}</label><br>
+                <div class="text-center mb-2" *ngIf="ShowSpinner">
+                    <div class="spinner-border" style="background-color: var(--card-color);color: var(--brand-color);" role="status">
+                    </div>
+                </div>
+                <label class="status" *ngIf="!ShowSpinner">{{ uploadStatus[i] }}</label>
+                <br>
+                <label class="text-primary" *ngIf="!ShowSpinner && uploadStatus[i]=='✅ Successfully Uploaded to MRA' " (click)="gotoSuccessRecords()" style="cursor: pointer;">
+                    <u> Click here to check in Records </u>
+                </label>
+
+            </div>
+        
+            <button class="upload-button btn btn-outline-success" (click)="uploadAll()">Upload All</button>
+        </div>
+        </div>
+        </div>
+  
+  

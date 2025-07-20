@@ -1,0 +1,85 @@
+/* Wrapper */
+.login-wrapper {
+    overflow: hidden;
+    background-color: #f8f9fa;
+}
+
+.dark-theme .login-wrapper {
+    background-color: #1a1b2e;
+}
+
+/* Branding Panel */
+.branding {
+    /* background: linear-gradient(135deg, #1a1b2e, #23243a); */
+    background-color: var(--brand-color);
+    flex: 0 0 40%;
+    min-height: 100vh;
+    padding: 2rem;
+    color: #fff;
+}
+
+@media (max-width: 767px) {
+    .branding {
+        flex: none;
+        min-height: auto;
+        width: 100%;
+        text-align: center;
+        padding: 1.5rem;
+    }
+}
+
+/* Login Card */
+.login-card {
+    max-width: 450px;
+    width: 100%;
+    border-radius: 1rem;
+    background-color: #ffffff;
+}
+
+.dark-theme .login-card {
+    background-color: #1e1e2e;
+    color: #eee;
+}
+
+@media (max-width: 767px) {
+    .login-card {
+        padding: 2rem !important;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+}
+
+/* Form Control Styles */
+.form-control:focus {
+    border-color: #ff006a !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 106, 0.25) !important;
+}
+
+.dark-theme .form-control {
+    background-color: #2c2c3a;
+    color: #fff;
+    border-color: #444;
+}
+
+.dark-theme .form-control:focus {
+    background-color: #333348;
+    border-color: #ff006a !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 106, 0.4) !important;
+}
+
+/* Theme */
+.light-theme {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.dark-theme {
+    background-color: #1a1b2e;
+    color: #fff;
+}
+
+/* Toggle Button */
+.toggle-btn {
+    border-color: #ccc;
+    color: #ff006a;
+}

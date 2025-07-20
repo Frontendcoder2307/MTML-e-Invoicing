@@ -1,0 +1,89 @@
+body,
+.form-control,
+.form-select,
+.form-label,
+.card-header {
+    font-size: 0.92rem;
+}
+
+sub {
+    cursor: pointer;
+}
+
+.card-header {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* === Reduce Input Heights === */
+.form-control,
+.form-select {
+    padding: 0.35rem 0.55rem;
+    height: auto;
+    line-height: 1.4;
+}
+
+/* === Buttons === */
+button,
+.btn {
+    font-size: 0.88rem;
+    padding: 0.4rem 0.8rem;
+}
+
+.input-group-text {
+    background-color: transparent;
+    color: var(--text-color);
+    border-color: var(--input-border);
+}
+
+input.form-control {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--input-border);
+}
+
+input.form-control:focus {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 0.25rem rgba(209, 43, 126, 0.25) !important;
+}
+
+input::placeholder {
+    color: #bbb;
+}
+
+
+@media (max-width:767px) {
+    .table-responsive {
+        max-height: 49vh;
+        font-size: 12px;
+    }
+
+    .unwantedcolumn {
+        display: none;
+    }
+}
+
+@media (min-width:768px) {
+    .table-responsive {
+        max-height: 54vh;
+    }
+}
+
+th {
+    background-color: var(--brand-color);
+    color: #fefefe !important;
+}
+
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+    background-color: rgba(235, 5, 140, 0.25) !important;
+    /* stronger brand color with more opacity */
+    transition: background-color 0.2s ease !;
+    cursor: pointer;
+    /* font-size: large; */
+    font-weight: 600;
+
+}

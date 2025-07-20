@@ -1,0 +1,91 @@
+<!-- Filters & Date Box Starts -->
+<div class="card mb-1">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <h4>Success Records ({{RecordlistCount}})</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 mb-1">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" id="search" class="form-control" placeholder="Search by Name,Invoice Number or Mobile Number"
+                        #searchbox />
+                    <button class="btn btn-outline-success ms-2" (click)="applyFilters(searchbox.value)">
+                        Search</button>
+                </div>
+            </div>
+            <div class="col-12 col-md-5 text-end" *ngIf='!showDateRange'>
+                <input type="date" class="form-control" #selectedDate (change)="singledate(selectedDate.value)" />
+                <sub class="text-end" (click)="showDateRangefunction()"><u>Advanced</u></sub>
+            </div>
+        </div>
+        <div class="row" *ngIf='showDateRange'>
+            <div class="col-12 col-md-5 mb-1">
+                <input type="date" class="form-control" #fromDate />
+            </div>
+            <div class="col-12 col-md-5 mb-1 text-end">
+                <input type="date" class="form-control" #toDate />
+                <sub class="text-end" (click)="showDateRangefunction()"><u>Back</u></sub>
+            </div>
+            <div class="col-12 col-md-1">
+                <button class="btn btn-outline-success" (click)="dateRange(fromDate.value,toDate.value)">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Filters & Date Box Ends -->
+
+<!-- Records Tabel Starts -->
+<div class="card mx-1">
+    <div class=" card-body table-responsive">
+        <div class="text-center mb-2" *ngIf="ShowSpinner">
+            <div class="spinner-border" style="background-color: var(--card-color);color: var(--brand-color);"
+                role="status">
+            </div>
+        </div>
+        <div *ngIf="SuccessRecordList.length>0;then successRecordtableBlock else successRecordtableBlockerrorBlock">
+        </div>
+        <ng-template #successRecordtableBlock>
+            <table class="table table-hover" *ngIf="!ShowSpinner">
+                <thead>
+                    <tr>
+                        <th style="border-radius: 5px 0 0 5px; ">Sl No.</th>
+                        <th>Inv ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th class="unwantedcolumn">Basic Amount</th>
+                        <th class="unwantedcolumn">Tax Amount</th>
+                        <th>Invoice Amount</th>
+                        <th>Discount</th>
+                        <th>Paid Amount</th>
+                        <th style="border-radius: 0 5px 5px 0">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let record of SuccessRecordList" (click)="gotoInvoicepage(record)">
+                        <td>{{record.invoiceId}}</td>
+                        <td>{{record.invoiceIndentifier}}</td>
+                        <td>{{record.buyerName}}</td>
+                        <td>{{record.processingDateTime.split("T")[0]}}</td>
+                        <td class="unwantedcolumn">{{record.totalAmtWoVatCur || 0.00 | number:'1.2-2'}}</td>
+                        <td class="unwantedcolumn">{{record.totalVatAmount || 0.00 | number:'1.2-2'}}</td>
+                        <td>{{record.invoiceTotal || 0.00 | number:'1.2-2'}}</td>
+                        <td>{{record.discountTotalAmount || 0.00 | number:'1.2-2'}}</td>
+                        <td>{{record.totalAmtPaid || 0.00 | number:'1.2-2'}}</td>
+                        <td> <span class="badge rounded-pill text-bg-success"> {{record.status}} </span> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-template>
+        <ng-template #successRecordtableBlockerrorBlock class="mx-2">
+            <div class="row" *ngIf="!ShowSpinner">
+                <div class="col-12 text-center">
+                    <h1 style="color: var(--brand-color);">No Records for Today</h1>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<!-- Records Tabel Ends -->

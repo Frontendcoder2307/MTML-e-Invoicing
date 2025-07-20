@@ -1,0 +1,13 @@
+.countCards{
+    cursor: pointer;
+}
+.countCards:hover{
+    font-size: larger;
+}
+
+@media  (max-width:767px) {
+
+    .iconclass{
+        display: none;
+    }
+}

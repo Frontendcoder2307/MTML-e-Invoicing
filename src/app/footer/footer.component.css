@@ -1,0 +1,17 @@
+.footer {
+    border-top: 1px solid #dee2e6;
+    font-size: 0.875rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.light-theme.footer {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.dark-theme.footer {
+    background-color: #1e1e2e;
+    color: #ccc;
+    border-color: #444;
+}

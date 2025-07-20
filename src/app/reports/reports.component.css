@@ -1,0 +1,11 @@
+@media (max-width:767px){
+    #heading{
+        font-size: 22px;
+    }
+}
+
+@media (min-width:768px) {
+    #heading {
+        font-size: 50px;
+    }
+}

@@ -1,0 +1,45 @@
+<div [ngClass]="theme" class="login-wrapper d-flex flex-column flex-md-row vh-100">
+    <!-- Branding Panel -->
+    <div class="branding d-flex flex-column justify-content-center align-items-center text-light  text-center p-4">
+    <img src="/assets/images/ChiLi-logo.svg" alt="Logo" height="60">
+        <h1 class="fw-bold display-5 my-2" style="color: #FEFEFE;">e-Invoicing</h1>
+        <p class="lead">Secure • Smart • Fast</p>
+    </div>
+
+    <!-- Login Card Panel -->
+    <div class="flex-grow-1 d-flex justify-content-center align-items-center px-3">
+        <div class="card login-card shadow-lg p-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0">Login</h3>
+                <button class="btn btn-sm btn-outline-light toggle-btn" (click)="toggleTheme();sendMessage()">
+                    <i [ngClass]="theme === 'light-theme' ? 'bi bi-moon-fill' : 'bi bi-sun-fill'"></i>
+                </button>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" [(ngModel)]="email"
+                        #emailField="ngModel" required placeholder="you@example.com">
+                    <div *ngIf="emailField.invalid && emailField.touched" class="text-danger small">
+                        Please enter a valid email.
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" [(ngModel)]="password"
+                        #passwordField="ngModel" required minlength="7" placeholder="••••••••" maxlength="7">
+                    <div *ngIf="passwordField.invalid && passwordField.touched" class="text-danger small">
+                        Password must be at least 7 characters.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn w-100 text-white" [disabled]="loginForm.invalid"
+                    style="background-color: var(--brand-color);">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

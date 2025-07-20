@@ -1,0 +1,23 @@
+<div class="layout-wrapper d-flex flex-column" [ngClass]="theme">
+    <!-- HEADER -->
+    <app-header (themeToggle)="toggleTheme()" (sidebarToggle)="toggleSidebar()"></app-header>
+
+    <!-- BODY: sidebar + main content -->
+    <div class="d-flex flex-grow-1 layout-body">
+        <!-- SIDEBAR -->
+        <app-sidebar [collapsed]="sidebarCollapsed" [theme]="theme"
+            (toggle)="toggleSidebar()"></app-sidebar>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content d-flex flex-column flex-grow-1 overflow-auto" [ngStyle]="{
+          marginLeft: !sidebarCollapsed ? '250px' :  '80px',
+          marginTop: '56px'}">
+            <div class="flex-grow-1">
+                <router-outlet></router-outlet>
+            </div>
+
+            <app-footer [theme]="theme"></app-footer>
+        </main>
+    </div>
+</div>
+  

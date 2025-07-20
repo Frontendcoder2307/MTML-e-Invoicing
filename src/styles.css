@@ -1,0 +1,202 @@
+/* Reset and base styles */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+}
+
+/* Light theme variables */
+:root {
+    --brand-color: #FF0088;
+
+
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --card-bg: #f8f9fa;
+    --card-border: #dee2e6;
+    --input-bg: #ffffff;
+    --input-text: #000000;
+    --input-border: #cccccc;
+    --input-placeholder: #666666;
+    --btn-bg: #0d6efd;
+    --btn-color: #ffffff;
+    --navbar-bg: #f8f9fa;
+    --navbar-text: #000000;
+}
+
+/* Dark theme variables */
+.dark-theme {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e2e;
+    --card-border: #444;
+    --input-bg: #1e1e2e;
+    --input-text: #e0e0e0;
+    --input-border: #555555;
+    --input-placeholder: #aaaaaa;
+    --btn-bg: #0069d9;
+    --btn-color: #ffffff;
+    --navbar-bg: #1a1a1a;
+    --navbar-text: #e0e0e0;
+}
+
+
+
+/* Apply variables */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    font-family: "Roboto", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+        font-variation-settings:
+        "wdth" 100;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--navbar-bg) !important;
+    color: var(--navbar-text) !important;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--card-border) !important;
+}
+
+/* Form inputs */
+.form-control,
+.form-select {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: var(--input-placeholder);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--btn-bg);
+    color: var(--btn-color);
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: darken(var(--btn-bg), 10%);
+    color: var(--btn-color);
+    outline: none;
+}
+
+/* Responsive fix */
+@media (max-width: 576px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+.btn:hover {
+    color: #fefefe;
+}
+
+.dark-theme .form-control:focus {
+    background-color: #3a3a3a;
+    border-color: #ff006a !important;
+    /* pink focus border */
+    box-shadow: 0 0 0 0.25rem rgba(209, 43, 126, 0.25) !important;
+    /* subtle pink shadow */
+    color: white;
+}
+
+.light-theme .form-control:focus {
+    background-color: #f8f9fa;
+    border-color: #ff006a !important;
+    /* pink focus border */
+    box-shadow: 0 0 0 0.25rem rgba(209, 43, 126, 0.25) !important;
+    /* subtle pink shadow */
+    color: black;
+}
+
+.light-theme .form-select:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: #ff006a !important;
+    /* pink focus border */
+    box-shadow: 0 0 0 0.25rem rgba(209, 43, 126, 0.25) !important;
+    /* subtle pink shadow */
+    color: black;
+}
+
+.dark-theme .form-select:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: #ff006a !important;
+    /* pink focus border */
+    box-shadow: 0 0 0 0.25rem rgba(209, 43, 126, 0.25) !important;
+    /* subtle pink shadow */
+
+}
+
+/* .toast.bg-success {
+    background-color: #ff006a !important; } */
+
+/* ------------------------------
+   THEME-BASED SHADOWS
+------------------------------- */
+
+/* LIGHT THEME */
+.light-theme .card,
+.light-theme .sidebar,
+.light-theme .modal {
+    background-color: #ffffff;
+    color: #212529;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.light-theme .form-control {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* DARK THEME */
+.dark-theme .card,
+.dark-theme .sidebar,
+.dark-theme .modal {
+    background-color: #1e1e2e;
+    color: #f1f1f1;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.2),
+        0 8px 16px rgba(0, 0, 0, 0.3);
+    border: none;
+}
+
+.dark-theme .form-control {
+    background-color: #2a2a3d;
+    color: #ffffff;
+    border: 1px solid #444;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.table {
+    color: var(--text-color) !important;
+}
+
+.table th,
+.table td {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    color: var(--text-color) !important;
+}

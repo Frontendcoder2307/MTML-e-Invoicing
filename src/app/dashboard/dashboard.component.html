@@ -1,0 +1,126 @@
+<!-- Counting Cards ROW Starts -->
+<div class="row mx-1">
+    <!-- All Records Card Starts-->
+    <div class="col-6 col-lg-3 my-1">
+        <div class="card text-center countCards" style="background-color: #007ba3 !important; ">
+            <div class="card-body" style="color: #FEFEFE;">
+                <div class="row">
+                    <div class=" col-12 col-md-8">
+                        <h1>{{RecordlistCount}}</h1>
+                        <small>Total Invoices</small>
+                    </div>
+                    <div class="col-md-4 mt-2 iconclass">
+                        <label>
+                            <label class="fw-bold" style="font-size: 45px;"><i class="bi bi-receipt-cutoff"
+                                    style="color: #00c2ff !important"></i></label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer" style="background-color: #00c2ff;" (click)="gotoPage('home/AllRecords')">
+                <small style="color: #FEFEFE !important;">More Info <i class="bi bi-caret-right-fill"
+                        style="color: #FEFEFE !important;"></i></small>
+            </div>
+        </div>
+    </div>
+    <!-- All Records Card Ends -->
+
+    <!-- Success Records Starts -->
+    <div class="col-6 col-lg-3 my-1">
+        <div class="card text-center text-light countCards" style="background-color: #009e4e !important; color: #FEFEFE ;">
+            <div class="card-body" style="color: #FEFEFE;">
+                <div class="row">
+                    <div class=" col-12 col-md-8">
+                        <h1>{{SuccessCount}}</h1>
+                        <small> Success Invoices</small>
+                    </div>
+                    <div class="col-md-4 mt-2 iconclass">
+                        <label>
+                            <label class="fw-bold" style="font-size: 45px; "><i class="bi bi-file-earmark-check"
+                                    style="color: #00e676 !important"></i></label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer" style="background-color: #00e676;" (click)="gotoPage('home/SuccessRecords')">
+                <small style="color: #FEFEFE !important;">More Info <i class="bi bi-caret-right-fill"
+                        style="color: #FEFEFE !important;"></i></small>
+            </div>
+        </div>
+    </div>
+    <!-- Success Records Ends -->
+
+    <!-- Pending Records Starts-->
+    <div class="col-6 col-lg-3 my-1">
+        <div class="card text-center text-light countCards" style="background-color: #b48b00 !important; color: #FEFEFE;">
+            <div class="card-body" style="color: #FEFEFE;">
+                <div class="row">
+                    <div class=" col-12 col-md-8">
+                        <h1>{{PendingCount}}</h1>
+                        <small>Pending Invoices</small>
+                    </div>
+                    <div class="col-md-4 mt-2 iconclass">
+                        <label>
+                            <label class="fw-bold" style="font-size: 45px;"><i class="bi bi-hourglass-split"
+                                    style=" color: #facc15 !important"></i></label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer" style="background-color: #facc15;" (click)="gotoPage('home/PendingRecords')">
+                <small style="color: #FEFEFE !important;">More Info <i class="bi bi-caret-right-fill"
+                        style="color: #FEFEFE !important;"></i></small>
+    
+            </div>
+        </div>
+    </div>
+    <!-- Pending Records Ends-->
+
+    <!-- Rejects Records Starts-->
+    <div class="col-6 col-lg-3 my-1">
+        <div class="card text-center text-light countCards" style="background-color: #b3004c !important; color: #FEFEFE;">
+            <div class="card-body" style="color: #FEFEFE;">
+                <div class="row">
+                    <div class=" col-12 col-md-8">
+                        <h1>{{RejectedCount}}</h1>
+                        <small>Rejected Invoices</small>
+                    </div>
+                    <div class="col-md-4 mt-2 iconclass">
+                        <label>
+                            <label class="fw-bold" style="font-size: 45px;"><i class="bi bi-file-earmark-x"
+                                    style=" color: #ff006a !important"></i></label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer" style="background-color: #ff006a;" (click)="gotoPage('home/RejectedRecords')">
+                <small style="color: #FEFEFE !important;">More Info <i class="bi bi-caret-right-fill"
+                        style="color: #FEFEFE !important;"></i></small>
+            </div>
+        </div>
+    </div>
+    <!-- Rejects Records Ends-->
+
+</div>
+<!-- Counting Cards ROW Ends -->
+
+<!-- Graph Cards ROW Starts -->
+<div class="row mx-1 my-2">
+    <div class="col-12 col-lg-6 mt-1">
+        <div class="card">
+            <div class="card-body">
+                <div class="spine" [chart]="waveChart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6 mt-1">
+        <div class="card">
+            <div class="card-body">
+                <!-- <div [chart]="barChart"></div> -->
+                <div [chart]="PieChart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Graph Cards ROW Ends -->

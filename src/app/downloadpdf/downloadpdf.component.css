@@ -1,0 +1,192 @@
+:root {
+    --brand-color: #FF0088;
+}
+
+.container,
+.table {
+    font-size: 14px;
+}
+
+.text-FF0088 {
+    color: var(--brand-color);
+}
+
+.bg-FF0088 {
+    background-color: var(--brand-color);
+}
+
+.btn-FF0088 {
+    background-color: var(--brand-color);
+    color: white;
+}
+
+.btn-FF0088:hover {
+    background-color: #e60075;
+    color: white;
+}
+
+.btn-outline-FF0088 {
+    border: 1px solid var(--brand-color);
+    color: var(--brand-color);
+}
+
+.btn-outline-FF0088:hover {
+    background-color: var(--brand-color);
+    color: white;
+}
+
+/* .table thead th {
+    background-color: var(--brand-color) !important;
+    color: white;
+} */
+
+.table td {
+    background-color: #ffffff;
+    border-color: #dee2e6 !important;
+    color: #000000 !important;
+    font-size: 13px;
+}
+
+.table th {
+    /* background-color: #FF0088; */
+    /* color: #121821 !important; */
+    border-color: #dee2e6 !important;
+    font-size: 13px;
+}
+
+
+input.form-control:focus {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 0.25rem rgba(209, 43, 126, 0.25) !important;
+}
+
+.light-theme {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.dark-theme {
+    background-color: #121821;
+    color: #e0e0e0;
+}
+
+.dark-theme a {
+    color: #ff68a0;
+}
+
+main {
+    min-height: calc(100vh - 56px);
+    /* full height minus header */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+
+main>* {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.layout-wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.layout-body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+/* Optional: make sure footer doesn't collapse */
+app-footer {
+    flex-shrink: 0;
+}
+
+
+@media print {
+
+    .no-print {
+        display: none !important;
+    }
+
+    body,
+    html {
+        height: auto !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    #invoice,
+    #invoice * {
+        visibility: visible;
+    }
+
+    #invoice {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        width: 95%;
+        background: white !important;
+    }
+
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    .table,
+    .table th,
+    .table td {
+        page-break-inside: avoid;
+        border: 1px solid #dee2e6 !important;
+        color: #000 !important;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tfoot {
+        display: table-footer-group;
+    }
+
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}

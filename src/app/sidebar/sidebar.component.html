@@ -1,0 +1,20 @@
+<nav [ngClass]="[theme, 'sidebar', collapsed ? 'collapsed' : '']">
+    <div class="d-flex justify-content-end p-2">
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggle.emit()" title="Toggle Sidebar" *ngIf="!collapsed" >
+            <i class="bi bi-layout-sidebar-inset-reverse"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" (click)="toggle.emit()" title="Toggle Sidebar" *ngIf="collapsed">
+            <i class="bi bi-layout-sidebar-inset"></i>
+        </button>
+    </div>
+
+    <ul class="nav flex-column">
+        <li class="nav-item mx-2" *ngFor="let item of menu">
+            <label class="nav-link d-flex align-items-center" (click)="toggle.emit();gotoPage(item.label)">
+                <i class="{{ item.icon }} me-2 fs-4"></i>
+                <span *ngIf="!collapsed">{{ item.label }}</span>
+            </label>
+        </li>
+    </ul>
+</nav>
+  
