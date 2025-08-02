@@ -144,6 +144,7 @@ app-footer {
         padding: 0 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+
     }
 
     body * {
@@ -153,6 +154,7 @@ app-footer {
     #invoice,
     #invoice * {
         visibility: visible;
+        font-size: 12px;
     }
 
     #invoice {

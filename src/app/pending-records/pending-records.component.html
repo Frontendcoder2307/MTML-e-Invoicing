@@ -10,8 +10,8 @@
             <div class="col-12 col-md-6 mb-1">
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" id="search" class="form-control" placeholder="Search by Name,Invoice Number or Mobile Number"
-                        #searchbox />
+                    <input type="text" id="search" class="form-control"
+                        placeholder="Search by Name,Invoice,Mobile,VAT and BRN Number" #searchbox />
                     <button class="btn btn-outline-success ms-2" (click)="applyFilters(searchbox.value)">
                         Search</button>
                 </div>
@@ -55,6 +55,8 @@
                         <th style="border-radius: 5px 0 0 5px; ">Sl No.</th>
                         <th>Inv ID</th>
                         <th>Name</th>
+                        <th>VAT No.</th>
+                        <th>BRN No.</th>
                         <th>Date</th>
                         <th class="unwantedcolumn">Basic Amount</th>
                         <th class="unwantedcolumn">Tax Amount</th>
@@ -69,6 +71,8 @@
                         <td>{{record.invoiceId}}</td>
                         <td>{{record.invoiceIndentifier}}</td>
                         <td>{{record.buyerName}}</td>
+                        <td>{{record.buyerTan || 'N/A'}}</td>
+                        <td>{{record.buyerBrn || 'N/A'}}</td>
                         <td>{{record.processingDateTime.split("T")[0]}}</td>
                         <td class="unwantedcolumn">{{record.totalAmtWoVatCur || 0.00 | number:'1.2-2'}}</td>
                         <td class="unwantedcolumn">{{record.totalVatAmount || 0.00 | number:'1.2-2'}}</td>

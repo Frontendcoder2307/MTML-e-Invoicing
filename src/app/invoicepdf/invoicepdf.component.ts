@@ -27,8 +27,13 @@ export class InvoicepdfComponent {
   roundingOffamt:any=0
   userName: any = localStorage.getItem('username')
   mobileNumber: any
-  previousBalance: number = 0
-  
+  previousBalance: any = 0
+  postBalance: any = 0
+  invoiceRefNumber:any
+  invoiceDueDate: any
+  invoiceIssueDate: any
+  invoiceTotalHeading: any
+  unitPriceHeading:any
 
   constructor(private location:Location,private router:Router, private http:HttpClient,private toast:ToastService){}
 
@@ -48,6 +53,8 @@ export class InvoicepdfComponent {
   getData(data: any) {
     this.invoice = data
     this.previousBalance = 0
+    this.postBalance = 0
+
     console.log("Invoice data==>>", this.invoice)
     const response = JSON.parse(this.invoice.invoiceResponse)[0];
     if (response.qrCode != "" || response.qrCode != null) {
@@ -57,10 +64,12 @@ export class InvoicepdfComponent {
 
     for (let i = 0; i < this.invoice.products.length; i++){
       this.InvoiceTotal = this.InvoiceTotal + this.invoice.products[i].quantity * this.invoice.products[i].unitPrice
-      if (this.invoice.products[i].itemDesc.includes('Postpaid Invoice')) {
-        this.previousBalance = parseFloat(this.previousBalance + this.invoice.products[i].previousBalance)
+      // if (this.invoice.products[i].itemDesc.includes('Postpaid Invoice')) {
+      this.previousBalance = this.invoice.products[0].previousBalance
+      
+
         this.roundingOffamt = (parseFloat(this.invoice.totalAmtWoVatMur) + parseFloat(this.invoice.totalVatAmount) - parseFloat(this.invoice.totalAmtPaid))
-      }
+      // }
       
     }
 
@@ -74,8 +83,38 @@ export class InvoicepdfComponent {
     else {
       this.mobileNumber = this.mobileNumber
     }
+
+    if (this.invoice.invoiceIndentifier.startsWith('R_')) {
+      this.invoiceRefNumber = this.invoice.invoiceIndentifier.split('R_')[1]
+      console.log("InvRef Number===>>",this.invoiceRefNumber)
+    }
     
-    console.log("Previous Balance--->>",this.previousBalance)
+    this.invoiceDueDate = this.invoice.invoiceDueDate || ''
+    const year = +this.invoiceDueDate.substring(0, 4);
+    const month = +this.invoiceDueDate.substring(4, 6) - 1;
+    const day = +this.invoiceDueDate.substring(6, 8);
+
+    this.invoiceIssueDate = this.invoice.dateTimeInvoiceIssued.split(' ')[0]
+    const Issueyear = +this.invoiceIssueDate.substring(0, 4);
+    const Issuemonth = +this.invoiceIssueDate.substring(4, 6) - 1;
+    const Issueday = +this.invoiceIssueDate.substring(6, 8);
+  
+
+    this.invoiceDueDate = new Date(year, month, day);
+    this.invoiceIssueDate = new Date(Issueyear, Issuemonth, Issueday)
+    
+    console.log("Previous Balance--->>", this.previousBalance)
+    
+    console.log(this.invoice.products[0].quantity)
+    if (this.invoice.products[0].quantity!=0) {
+      this.unitPriceHeading = 'Unit Price'
+      this.invoiceTotalHeading='Invoice Total'
+    }
+    else {
+      this.unitPriceHeading = 'Amount'
+      this.invoiceTotalHeading = 'Pre Balance Total'
+    }
+    
   }
 
   getQRCode(): string {
@@ -120,7 +159,7 @@ export class InvoicepdfComponent {
         // console.log(this.invoice.invoiceIndentifier)
         this.invoice.invoiceIndentifier = this.invoice.invoiceIndentifier.split('/')[1]
       }
-      let msg: any = 'https://tinyurl.com/bdduwvz7/' + this.invoice.invoiceIndentifier
+      let msg: any ='Dear Customer, your VAT Invoice can be downloaded from '+'https://tinyurl.com/bdduwvz7/' + this.invoice.invoiceIndentifier+' in PDF format. Thank you.'
       this.http.get('https://ekyc.chili.mu:9443/ekyc/v1/sms?msisdn=230'+this.mobileNumber+'&from=CHiLi%20Bill&text='+msg+'&configId=1&locale=en').subscribe((data: any) => {
         let response = data
         this.toast.show(`Successfully sent to ${this.mobileNumber}`,'success')

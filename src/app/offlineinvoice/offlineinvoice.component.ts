@@ -11,17 +11,26 @@ import { Router } from "@angular/router";
 })
 export class OfflineinvoiceComponent {
 
+  bootstrap: any;
   vatRate = 0.15;
-  invoiceForm: FormGroup;
+  invoiceForm: any;
   totalDiscountAmount: any = 0
   ShowSpinner: boolean = false
   uploadSuccessfully:boolean = false
+  maxDate: any
+  dueDate: any
+  surchargeAmount: any = 0
+  selectedInvoiceType: any = 'Normal'
+  isPreviewMode = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private toast: ToastService, private router:Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private toast: ToastService, private router: Router) {
+    const today = new Date().toISOString().split('T')[0];
+    this.maxDate = today;
+
     this.invoiceForm = this.fb.group({
       invoiceNumber: ['', Validators.required],
       invoiceDate: ['', Validators.required],
-      // dueDate: ['', Validators.required],
+      dueDate: [''],
       // poReferenceNumber: [''],
       transactionType: ['B2B',Validators.required],
       personType: ['VATR', Validators.required], // dropdown: VATR / NON-VATR
@@ -102,6 +111,13 @@ export class OfflineinvoiceComponent {
     const item = this.items.at(i);
     const val = item.value;
 
+    if (val.taxCode != 'TC01') {
+      this.vatRate=0
+    }
+    else {
+      this.vatRate = 0.15
+    }
+
     const quantity = val.quantity || 0;
     const unitPrice = val.unitPrice || 0;
     const discount = val.discount || 0;
@@ -117,6 +133,8 @@ export class OfflineinvoiceComponent {
       vatAmt: vatAmt.toFixed(2),
       totalPrice: totalPrice.toFixed(2)
     }, { emitEvent: false });
+
+    
   }
 
   calculateAllItems() {
@@ -130,11 +148,23 @@ export class OfflineinvoiceComponent {
     }, 0);
   }
 
+  surchargeAmountcalculation() {
+     this.surchargeAmount=0
+    this.dueDate = this.invoiceForm.get('dueDate')?.value
+    console.log("DueDate===>>", typeof (this.dueDate))
+    if (this.dueDate != '') {
+      this.surchargeAmount = (this.subtotal * 0.10) + this.vatAmount + this.subtotal
+      console.log("Surcharge Amount==>>", this.surchargeAmount)
+    }
+     
+  }
+
   get vatAmount(): number {
     return this.subtotal * this.vatRate;
   }
 
   grandTotal(): number {
+    this.surchargeAmountcalculation()
     const discountTotal = this.invoiceForm.get('discountTotalAmount')?.value + this.invoiceForm.get('roundoffAMount')?.value || 0;
     return this.subtotal + this.vatAmount - discountTotal;
   }
@@ -153,6 +183,16 @@ export class OfflineinvoiceComponent {
     });
   }
 
+  // ngAfterViewInit() {
+  //   const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  //   tooltipTriggerList.forEach(el => this.bootstrap.Tooltip(el));
+  // }
+
+  onInvoiceTypeChange(type: string) {
+    this.selectedInvoiceType = type
+    console.log("Invoice Type==>>",this.selectedInvoiceType)
+  }
+
   formatInvoiceDate(date: any): string {
     const d = new Date(date);
     return (
@@ -165,13 +205,21 @@ export class OfflineinvoiceComponent {
     );
   }
 
-  onSubmit() {
-    if (this.invoiceForm.valid) {
-      this.ShowSpinner = true
-      this.totalDiscountAmount=0
-      const data = this.invoiceForm.value;
+  editForm() {
+    this.isPreviewMode = false;
+  }
+
+  confirmInvoice() {
+    this.ShowSpinner = true
+
+    // Your API call here...    
+    const data = this.invoiceForm.value;
+    console.log('Sending to API:', data);
+
         // Format invoiceDate
-        const formattedDate = this.formatInvoiceDate(data.invoiceDate);
+      const formattedDate = this.formatInvoiceDate(data.invoiceDate);
+      const formattedDueDate = this.formatInvoiceDate(data.dueDate);
+
 
         // Prepare items list in API format
         const itemList = data.items.map((item: any, index: number) => {
@@ -189,7 +237,7 @@ export class OfflineinvoiceComponent {
             nature: item.nature,
             productCodeMra: item.productCodeMra,
             productCodeOwn: item.productCodeOwn,
-            itemDesc: item.itemType +"-"+ item.itemDesc,
+            itemDesc: item.itemType +"~"+ item.itemDesc,
             quantity: quantity.toString(),
             unitPrice: unitPrice.toString(),
             discount: discount ? discount.toString() : '',
@@ -209,7 +257,6 @@ export class OfflineinvoiceComponent {
 
         }
         console.log("totalDiscountAmount--->>", this.totalDiscountAmount)
-
         const requestBody = [{
           invoiceCounter: '1',
           transactionType: data.transactionType,
@@ -219,7 +266,7 @@ export class OfflineinvoiceComponent {
           invoiceIdentifier: data.invoiceNumber, // fixed
           invoiceRefIdentifier: data.invoiceRefIdentifier,
           previousNoteHash: 'prevNote',
-          reasonStated: (data.invoiceTypeDesc === 'CRN' || data.invoiceTypeDesc === 'DRN') ? data.reasonStated : '',
+          reasonStated: (data.invoiceTypeDesc === 'CRN' || data.invoiceTypeDesc === 'DRN') ? data.reasonStated : ''+"~ 0",
           salesTransactions: data.salesTransactions,
           totalVatAmount: this.vatAmount.toFixed(2),
           totalAmtWoVatCur: this.subtotal.toFixed(2),
@@ -227,6 +274,8 @@ export class OfflineinvoiceComponent {
           invoiceTotal: this.grandTotal().toFixed(2),
           discountTotalAmount: data.discountTotalAmount,
           totalAmtPaid: this.grandTotal().toFixed(2),
+          invoiceDueDate: formattedDueDate,
+          surchargeAmount:this.surchargeAmount.toString(),
           dateTimeInvoiceIssued: formattedDate,
           seller: {
             name: 'MTML',
@@ -277,10 +326,140 @@ export class OfflineinvoiceComponent {
           }
         }, error => {
           console.log('Failed')
-          this.toast.show('Failed to Upload', "danger")
+          let errorText = error.error.text
+          if (errorText == 'Invoice already submitted. Skipping submission.') {
+            this.toast.show(`This Invoice is already Submitted`, "info")
+          }
+          else {
+            this.toast.show('Failed to Upload', "danger")
+
+          }
           this.ShowSpinner = false
 
         })
+  }
+
+  onSubmit() {
+    if (this.invoiceForm.valid) {
+      // this.ShowSpinner = true
+      this.totalDiscountAmount = 0
+      this.isPreviewMode = true;
+
+      // const data = this.invoiceForm.value;
+      //   // Format invoiceDate
+      // const formattedDate = this.formatInvoiceDate(data.invoiceDate);
+      // const formattedDueDate = this.formatInvoiceDate(data.dueDate);
+
+
+      //   // Prepare items list in API format
+      //   const itemList = data.items.map((item: any, index: number) => {
+      //     const quantity = Number(item.quantity);
+      //     const unitPrice = Number(item.unitPrice);
+      //     const discount = Number(item.discount) || 0;
+
+      //     const amtWoVatCur = quantity * unitPrice - discount;
+      //     const vatAmt = amtWoVatCur * this.vatRate;
+      //     const totalPrice = amtWoVatCur + vatAmt;
+
+      //     return {
+      //       itemNo: (index + 1).toString(),
+      //       taxCode: item.taxCode,
+      //       nature: item.nature,
+      //       productCodeMra: item.productCodeMra,
+      //       productCodeOwn: item.productCodeOwn,
+      //       itemDesc: item.itemType +"~"+ item.itemDesc,
+      //       quantity: quantity.toString(),
+      //       unitPrice: unitPrice.toString(),
+      //       discount: discount ? discount.toString() : '',
+      //       discountedValue: discount > 0 ? (amtWoVatCur.toFixed(2)) : '',
+      //       amtWoVatCur: amtWoVatCur.toFixed(2),
+      //       amtWoVatMur: amtWoVatCur.toFixed(2),
+      //       vatAmt: vatAmt.toFixed(2),
+      //       totalPrice: totalPrice.toFixed(2)
+      //     };
+      //   });
+
+      
+      //   for (let i = 0; i < itemList.length; i++) {
+      //     console.log("Item Length--->>", itemList[i].discount)
+      //     this.totalDiscountAmount = this.totalDiscountAmount + parseFloat(itemList[i].discount)
+      //     // console.log("TYpe of totalDiscountAmount--->>", typeof (itemList[i].discount))
+
+      //   }
+      //   console.log("totalDiscountAmount--->>", this.totalDiscountAmount)
+      //   const requestBody = [{
+      //     invoiceCounter: '1',
+      //     transactionType: data.transactionType,
+      //     personType: data.personType,
+      //     invoiceTypeDesc: data.invoiceTypeDesc, //STD/CR/DRN
+      //     currency: 'MUR',
+      //     invoiceIdentifier: data.invoiceNumber, // fixed
+      //     invoiceRefIdentifier: data.invoiceRefIdentifier,
+      //     previousNoteHash: 'prevNote',
+      //     reasonStated: (data.invoiceTypeDesc === 'CRN' || data.invoiceTypeDesc === 'DRN') ? data.reasonStated : '',
+      //     salesTransactions: data.salesTransactions,
+      //     totalVatAmount: this.vatAmount.toFixed(2),
+      //     totalAmtWoVatCur: this.subtotal.toFixed(2),
+      //     totalAmtWoVatMur: this.subtotal.toFixed(2),
+      //     invoiceTotal: this.grandTotal().toFixed(2),
+      //     discountTotalAmount: data.discountTotalAmount,
+      //     totalAmtPaid: this.grandTotal().toFixed(2),
+      //     invoiceDueDate: formattedDueDate,
+      //     surchargeAmount:this.surchargeAmount.toString(),
+      //     dateTimeInvoiceIssued: formattedDate,
+      //     seller: {
+      //       name: 'MTML',
+      //       tradeName: 'MTML',
+      //       tan: '20275899',
+      //       brn: 'C07048459',
+      //       businessAddr: '25, Rosiers Avenue',
+      //       businessPhoneNo: '52943333',
+      //       ebsCounterNo: 'a1'
+      //     },
+      //     buyer: {
+      //       name: data.clientName || '',
+      //       tan: data.vatNumber || '',
+      //       brn: data.brnNumber || '',
+      //       businessAddr: data.address || '',
+      //       buyerType: data.personType,
+      //       nic: '',
+      //       msisdn: data.contactNumber || ''            
+      //     },
+      //     itemList: itemList
+      //   }];
+
+      //   console.log('Request Body:', requestBody);
+
+        // Call your API service here
+        // this.http.post('http://41.222.103.118:8889/mtml/mra/invoices/v1/transmitInvoice', requestBody).subscribe((data: any) => {
+        //   let response = data
+        //   console.log('response==>>', response.fiscalisedInvoices)
+          
+        //   this.ShowSpinner = false
+
+
+        //   if (response.status == 'SUCCESS') {
+        //     this.toast.show('Uploaded Successfully', "success")
+        //     this.invoiceForm.reset()
+        //     this.uploadSuccessfully = true
+
+        //   }
+        //   else {
+        //     let errorList: { code: any; description: string }[] = [];
+        //     const invoice = response.fiscalisedInvoices[0];
+        //     if (invoice && invoice.errorMessages) {
+        //       errorList = invoice.errorMessages;
+        //     }
+        //     for (let i = 0; i < errorList.length; i++){
+        //       this.toast.show(errorList[i].description, "danger")
+        //     }
+        //   }
+        // }, error => {
+        //   console.log('Failed')
+        //   this.toast.show('Failed to Upload', "danger")
+        //   this.ShowSpinner = false
+
+        // })
 
       
     } else {
@@ -288,9 +467,9 @@ export class OfflineinvoiceComponent {
       const data:any = this.invoiceForm.value;
       console.log("Invoice Form==>>", data)
       let vatNumber: any = data.vatNumber.toString()
-      let address: any = data.address.toString()
+      
       let brnNumber: any = data.brnNumber.toString()
-      let contactNumber: any = data.contactNumber.toString()
+      
       let invoiceNumber: any = data.invoiceNumber.toString()
       let invoiceDate: any = data.invoiceDate.toString()
       let paymentMode: any = data.salesTransactions

@@ -19,7 +19,12 @@ export class DownloadpdfComponent {
   roundingOffamt:any=0
   userName: any = localStorage.getItem('username')
   mobileNumber: any
-  previousBalance: number = 0
+  previousBalance: any = 0
+  invoiceRefNumber: any;
+  invoiceDueDate: any;
+  invoiceIssueDate: any
+  unitPriceHeading: any
+  invoiceTotalHeading: any
 
 
   constructor( private router: Router, private activatedRouter:ActivatedRoute, private http:HttpClient) { }
@@ -77,9 +82,10 @@ export class DownloadpdfComponent {
         this.status = objresponse.status
         for (let i = 0; i < this.invoice.products.length; i++) {
           this.InvoiceTotal = this.InvoiceTotal + this.invoice.products[i].quantity * this.invoice.products[i].unitPrice
-          this.previousBalance = parseFloat(this.previousBalance + this.invoice.products[i].previousBalance)
+          // this.previousBalance = parseFloat(this.previousBalance + this.invoice.products[i].previousBalance)
 
         }
+        this.previousBalance = this.invoice.products[0].previousBalance
         // console.log('Invoice Total--->>', this.InvoiceTotal)
         this.roundingOffamt = (parseFloat(this.invoice.totalAmtWoVatMur) + parseFloat(this.invoice.totalVatAmount) - parseFloat(this.invoice.totalAmtPaid))
         // console.log('Rounding Amount--->>', this.roundingOffamt)
@@ -87,6 +93,34 @@ export class DownloadpdfComponent {
         // console.log("Response==>>", response.irn)
     
         this.mobileNumber = this.invoice.buyerMsisdn
+        if (this.invoice.invoiceIndentifier.startsWith('R_')) {
+          this.invoiceRefNumber = this.invoice.invoiceIndentifier.split('R_')[1]
+          console.log("InvRef Number===>>", this.invoiceRefNumber)
+        }
+        this.invoiceDueDate = this.invoice.invoiceDueDate || ''
+        const year = +this.invoiceDueDate.substring(0, 4);
+        const month = +this.invoiceDueDate.substring(4, 6) - 1;
+        const day = +this.invoiceDueDate.substring(6, 8);
+
+        this.invoiceDueDate = new Date(year, month, day);
+
+        this.invoiceIssueDate = this.invoice.dateTimeInvoiceIssued.split(' ')[0]
+        const Issueyear = +this.invoiceIssueDate.substring(0, 4);
+        const Issuemonth = +this.invoiceIssueDate.substring(4, 6) - 1;
+        const Issueday = +this.invoiceIssueDate.substring(6, 8);
+
+        this.invoiceIssueDate = new Date(Issueyear, Issuemonth, Issueday)
+
+        if (this.invoice.products[0].quantity != 0) {
+          this.unitPriceHeading = 'Unit Price'
+          this.invoiceTotalHeading = 'Invoice Total'
+        }
+        else {
+          this.unitPriceHeading = 'Amount'
+          this.invoiceTotalHeading = 'Pre Balance Total'
+        }
+        
+
       }
       }, error => {
         console.log("Error msg==>", error)

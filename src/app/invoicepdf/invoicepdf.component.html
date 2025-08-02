@@ -2,36 +2,38 @@
     <div class="row my-3 justify-content-center">
         <div class="col-10">
             <div class="border border-secondary-subtle rounded-4 overflow-hidden mt-3" id="content">
-            
+
                 <!-- Header with Brand Color -->
-            <!-- Company Header Section -->
-            <div class="container py-2 border-bottom">
-                <div class="row align-items-center text-center text-md-start">
-            
-                    <!-- Company Logo (Left on large, top on small) -->
-                    <div class="col-12 col-md-3 mb-1 mb-md-0">
-                        <img src="/assets/images/MTML.jpg" alt="Company Logo" class="img-fluid" style="max-height: 60px;">
-                    </div>
-            
-                    <!-- Company Info (Centered) -->
-                    <div class="col-12 col-md-6 text-center">
-                        <h5 class="fw-bold mb-1">MAHANAGAR TELEPHONE (MAURITIUS) LTD</h5>
-                        <p class="mb-1">63, Cybercity, Ebene, Mauritius</p>
-                        <p class="mb-0 small">
-                            <strong>Helpdesk:</strong> 8960 &nbsp; | &nbsp;
-                            <strong>Phone:</strong> +230 5294 3333 &nbsp; | &nbsp;
-                            <strong>Web:</strong> <a href="http://www.chili.mu" target="_blank">www.chili.mu</a>
-                        </p>
-                    </div>
-            
-                    <!-- Optional QR/Stamp Image (Right) -->
-                    <div class="col-12 col-md-3 mt-1 mt-md-0 text-md-end">
-                        <img src="/assets/images/chililogo.jpg" alt="QR Code" class="img-fluid" style="max-height: 60px;">
+                <!-- Company Header Section -->
+                <div class="container py-2 border-bottom">
+                    <div class="row align-items-center text-center text-md-start">
+
+                        <!-- Company Logo (Left on large, top on small) -->
+                        <div class="col-12 col-md-3 mb-1 mb-md-0">
+                            <img src="/assets/images/MTML.jpg" alt="Company Logo" class="img-fluid"
+                                style="max-height: 60px;">
+                        </div>
+
+                        <!-- Company Info (Centered) -->
+                        <div class="col-12 col-md-6 text-center">
+                            <h5 class="fw-bold mb-1">MAHANAGAR TELEPHONE (MAURITIUS) LTD</h5>
+                            <p class="mb-1">63, Cybercity, Ebene, Mauritius</p>
+                            <p class="mb-0 small">
+                                <strong>Helpdesk:</strong> 8960 &nbsp; | &nbsp;
+                                <strong>Phone:</strong> +230 5294 3333 &nbsp; | &nbsp;
+                                <strong>Web:</strong> <a href="http://www.chili.mu" target="_blank">www.chili.mu</a>
+                            </p>
+                        </div>
+
+                        <!-- Optional QR/Stamp Image (Right) -->
+                        <div class="col-12 col-md-3 mt-1 mt-md-0 text-md-end">
+                            <img src="/assets/images/chililogo.jpg" alt="QR Code" class="img-fluid"
+                                style="max-height: 60px;">
+                        </div>
                     </div>
                 </div>
-            </div>
-              
-                
+
+
                 <!-- Invoice Info Section -->
                 <!-- <div class="text-white p-4 d-flex justify-content-between align-items-center">
                     <div>
@@ -42,23 +44,27 @@
                         <img src="/assets/images/ChiLi-logo.svg" alt="ChiLi Logo" height="80" class="bg-FF0088 p-2 rounded-3">
                     </div>
                 </div> -->
-  
-            
+
+
                 <div class="p-2 text-dark">
-            
+
                     <!-- Seller & Buyer Info -->
                     <div class="row ">
                         <div class="col-md-6">
                             <h5 class="fw-semibold">{{ invoice.sellerName }}</h5>
                             <div class="small text-muted">
-                                <p class="mb-1">{{ invoice.sellerbusinessAddr }}</p>
                                 <p class="mb-1">BRN: {{ invoice.sellerBrn }}</p>
                                 <p class="mb-1">TAN: {{ invoice.sellerTan }}</p>
+                                <p class="mb-1">VAT ID: VAT{{ invoice.sellerTan }}</p>
+
                             </div>
                         </div>
                         <div class="col-md-6 text-md-end">
-                            <p class="mb-1"><strong>Issued:</strong> {{ invoice.dateTimeInvoiceIssued.split(' ')[0] }}</p>
+                            <p class="mb-1"><strong>Issue Date:</strong> {{ invoiceIssueDate |date:'dd/MM/yyyy'}}</p>
+                            <p class="mb-1"><strong>Invoice Type:</strong> {{ invoice.invoiceTypeDesc || '' }}</p>
                             <p class="mb-1"><strong>Invoice ID:</strong> {{invoice.invoiceIndentifier}}</p>
+                            <p class="mb-1" *ngIf="invoiceRefNumber != null"><strong>Invoice Ref ID:</strong>
+                                {{invoiceRefNumber}}</p>
                             <p class="mb-1"><strong>Transaction:</strong> {{ invoice.txnType }}</p>
                             <p class="mb-1"><strong>IRN:</strong> {{ IRN || '' }}</p>
                             <p class="mb-1"><strong>Status:</strong>
@@ -74,14 +80,17 @@
                             </p>
                         </div>
                     </div>
-            
+
                     <!-- Buyer Info -->
                     <div class="row mb-2">
                         <div class="col-md-6">
-                            <h6 class="fw-bold">Bill To</h6>
+                            <h6 class="fw-bold">Bill To</h6>                            
+                            <ng-container *ngIf="invoice.reasonStated.split('~')[1] !=0">
+                                <p class="text-muted small mb-1" >Account Id:{{ invoice.reasonStated.split('~')[1]|| 'N/A' }}</p>
+                            </ng-container>
                             <p class="mb-1">{{ invoice.buyerName }}</p>
                             <ng-container *ngIf="invoice.buyerbusinessAddr !='N/A' || invoice.buyerbusinessAddr ">
-                            <p class="text-muted small mb-1">{{ invoice.buyerbusinessAddr }}</p>
+                                <p class="text-muted small mb-1">{{ invoice.buyerbusinessAddr }}</p>
                             </ng-container>
 
                             <p class="text-muted small mb-1">Type: {{ invoice.buyerType }}</p>
@@ -89,11 +98,11 @@
                             <ng-container *ngIf="invoice.buyerBrn">
                                 <p class="text-muted small mb-1">BRN: {{ invoice.buyerBrn }}</p>
                             </ng-container>
-            
+
                             <ng-container *ngIf="invoice.buyerTan">
                                 <p class="text-muted small mb-1">VAT No: {{ invoice.buyerTan }}</p>
                             </ng-container>
-            
+
                             <ng-container *ngIf="invoice.buyerNic">
                                 <p class="text-muted small mb-0">NIC: {{ invoice.buyerNic }}</p>
                             </ng-container>
@@ -102,29 +111,44 @@
                                 <p class="text-muted small mb-0">Contact Number: {{ invoice.buyerMsisdn }}</p>
                             </ng-container>
                         </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <ng-container *ngIf="QRCode !=''">
+                                    <img [src]=QRCode alt="QR Code" width="120" class="border rounded-3">
+                                    <p class="text-muted small">Generated by MRA</p>
+                                </ng-container>
+                                <ng-template *ngIf="QRCode ==''">
+                                    <p class="text-muted fst-italic">QR Code not available.</p>
+                                </ng-template>
+                            </div>
+                        </div>
                     </div>
-            
+
                     <!-- Product Table -->
                     <div class="table-responsive mb-4">
                         <table class="table table-bordered rounded-3 overflow-hidden">
-                            <thead >
+                            <thead>
                                 <tr>
                                     <th style="color: #121821 !important">#</th>
                                     <th style="color: #121821 !important">Item Type</th>
-                                    <th style="color: #121821 !important">Description</th>
-                                    <th style="color: #121821 !important" class="text-center">Qty</th>
-                                    <th style="color: #121821 !important" class="text-end">Unit Price <small>(MUR)</small></th>
-                                    <th style="color: #121821 !important" class="text-end">Total <small>(MUR)</small></th>
+                                    <th style="color: #121821 !important">Description/Call or SMS Count </th>
+                                    <th style="color: #121821 !important" class="text-center" *ngIf="this.invoice.products[0].quantity!=0">Qty/Total Mins</th>
+                                    <th style="color: #121821 !important" class="text-end">{{unitPriceHeading}}<small>(Rs.)</small></th>
+                                    <th style="color: #121821 !important" class="text-end" *ngIf="invoice.totalVatAmount != 0">VAT Amt</th>
+                                    <th style="color: #121821 !important" class="text-end">Total <small>(Rs.)</small></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let p of invoice.products; let i = index">
                                     <td style="background-color: #FEFEFE;">{{ i + 1 }}</td>
-                                    <td style="background-color: #FEFEFE;">{{ p.itemDesc.split("-")[0].split(' ')[0]+" "+p.itemDesc.split("-")[0].split(' ')[1]}}</td>
-                                    <td style="background-color: #FEFEFE;">{{ p.itemDesc.split('-')[1] }}</td>
-                                    <td class="text-center" style="background-color: #FEFEFE;">{{ p.quantity }}</td>
-                                    <td class="text-end" style="background-color: #FEFEFE;">{{ p.unitPrice | number:'1.2-2' }}</td>
-                                    <td class="text-end" style="background-color: #FEFEFE;">{{ p.quantity * p.unitPrice | number:'1.2-2' }}</td>
+                                    <td style="background-color: #FEFEFE;">{{ p.itemDesc.split("~")[0]}}</td>
+                                    <td style="background-color: #FEFEFE;">{{ p.itemDesc.split("~")[1] }}</td>
+                                    <td class="text-center" style="background-color: #FEFEFE;" *ngIf="this.invoice.products[0].quantity!=0">{{ p.quantity }}</td>
+                                    <td class="text-end" style="background-color: #FEFEFE;">{{ p.unitPrice |
+                                        number:'1.2-2' }}</td>
+                                        <td class="text-end" style="background-color: #FEFEFE;" *ngIf="invoice.totalVatAmount != 0">{{ p.vatAmt |
+                                            number:'1.2-2' }}</td>
+                                    <td class="text-end" style="background-color: #FEFEFE;">{{ p.totalPrice | number:'1.2-2' }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -134,32 +158,50 @@
                     <div class="table-responsive mb-4">
                         <table class="table table-bordered rounded-3 overflow-hidden text-center">
                             <thead>
-                                <tr >
-                                    <th style="color: #121821 !important">InvoiceTotal <small>(MUR)</small></th>
-                                    <th style="color: #121821 !important">Total VAT <small>(MUR)</small></th>
-                                    <th style="color: #121821 !important">Discount <small>(MUR)</small></th>
-                                    <th style="color: #121821 !important">Previous Balance <small>(MUR)</small></th>
-                                    <th style="color: #121821 !important">Total <small>(MUR)</small></th>
-                                    <th style="color: #121821 !important" >Paid (MUR)</th>
+                                <tr>
+                                    <th style="color: #121821 !important">InvoiceTotal <small>(Rs.)</small></th>
+                                    <th style="color: #121821 !important">Total VAT <small>(Rs.)</small></th>
+                                    <th style="color: #121821 !important">Discount <small>(Rs.)</small></th>
+                                    <th style="color: #121821 !important">Previous Balance <small>(Rs.)</small></th>
+                                    <th style="color: #121821 !important">Total <small>(Rs.)</small></th>
+                                    <th style="color: #121821 !important">Paid (Rs.)</th>
+                                    <th style="color: #121821 !important" >Post Balance <small>(Rs.)</small></th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr >
-                                    <td style="background-color: #FEFEFE;">{{ InvoiceTotal | number:'1.2-2'}}</td>
-                                    <td style="background-color: #FEFEFE;"> {{ invoice.totalVatAmount| number:'1.2-2' }}</td>
-                                    <td style="background-color: #FEFEFE;"> - {{ invoice.discountTotalAmount || 0.00 | number:'1.2-2' }}</td>
-                                    <td style="background-color: #FEFEFE;"> {{ previousBalance| number:'1.2-2' }}</td>
-                                    <td style="background-color: #FEFEFE;"> {{ invoice.invoiceTotal |number:'1.2-2' }}</td>
-                                    <td  style="background-color: #FEFEFE;"> {{ invoice.totalAmtPaid | number:'1.2-2'}}</td>
+                                <tr>
+                                    <td style="background-color: #FEFEFE;">{{ invoice.invoiceTotal | number:'1.2-2'}}</td>
+                                    <td style="background-color: #FEFEFE;"> {{ invoice.totalVatAmount| number:'1.2-2' }}
+                                    </td>
+                                    <td style="background-color: #FEFEFE;"> - {{ invoice.discountTotalAmount || 0.00 |
+                                        number:'1.2-2' }}</td>
+                                    <td style="background-color: #FEFEFE;"> {{ previousBalance.split("~")[0] | number:'1.2-2' }}</td>
+
+                                    <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc!='CRN'"> {{ invoice.invoiceTotal |number:'1.2-2' }}</td>
+                                    <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc=='CRN'"> -{{ invoice.invoiceTotal |number:'1.2-2' }}
+                                    </td>
+                                    <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc!='CRN'"> {{ invoice.totalAmtPaid | number:'1.2-2'}}</td>
+                                    <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc=='CRN'"> -{{ invoice.totalAmtPaid | number:'1.2-2'}}
+                                    </td>
+                                    <td style="background-color: #FEFEFE;" > {{ previousBalance.split("~")[1] || 0.00 | number:'1.2-2'  }}</td>
+
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                    <div class="row">
+                        <div class="col-mb-12" *ngIf="invoice.surchargeAmount > 0 && invoice.invoiceDueDate != null">
+                            <small><b class="text-danger">*NOTE:&nbsp;</b><label>The surcharge (@10%) will be
+                                applicable for any payment made after due date: <b>{{invoiceDueDate | date:'dd/MM/yyyy'}}</b> and amount will
+                                be <b> Rs.{{invoice.surchargeAmount | number:'1.2-2'}}</b></label></small>
+                        </div>
+                    </div>
 
-            
+
                     <!-- Totals Section -->
                     <div class="row justify-content-end">
-                        <div class="col-12 text-start ">
+                        <!-- <div class="col-12 text-start ">
                             <div class="text-center">
                                 <ng-container *ngIf="QRCode !=''">
                                     <img [src]=QRCode alt="QR Code" width="120">
@@ -169,9 +211,9 @@
                                     <p class="text-muted fst-italic">QR Code not available.</p>
                                 </ng-template>
                             </div>
-                        </div>
-            
-            
+                        </div> -->
+
+
                         <!-- <div class="col-md-5">
                             <table class="table table-borderless">
                                 <tr>
@@ -218,7 +260,7 @@
                             </table>
                         </div> -->
                     </div>
-            
+
                     <!-- QR Code -->
                     <!-- <div class="text-center my-4">
                                             <ng-container *ngIf="QRCode !=''">
@@ -229,23 +271,24 @@
                                                 <p class="text-muted fst-italic">QR Code not available.</p>
                                             </ng-template>
                                         </div> -->
-            
+
                     <!-- Footer Notes -->
                     <div class="border-top pt-3 text-muted small">
-                        <p><strong>Note:</strong> {{ invoice.reasonStated || 'Thank you for your business.' }}</p>
+                        <p><strong>Note:</strong> {{ invoice.reasonStated.split('~')[0] || 'Thank you for your business.' }}</p>
                         <p class="mb-0">Generated on {{ invoice.processingDateTime.split('T')[0] }}</p>
                     </div>
-            
-            
+
+
                 </div>
-                </div>
+            </div>
         </div>
-        
+
     </div>
     <!-- Action Buttons -->
-    <div class="text-end my-4 no-print" >
+    <div class="text-end my-4 no-print">
         <button class="btn btn-outline-warning me-2" (click)="printInvoice()">🖨️ Print</button>
-        <button class="btn btn-outline-warning me-2" data-bs-toggle="modal" data-bs-target="#sendSMSModal">📲 Send SMS</button>    
+        <button class="btn btn-outline-warning me-2" data-bs-toggle="modal" data-bs-target="#sendSMSModal">📲 Send
+            SMS</button>
         <button class="btn btn-outline-warning me-2" (click)="goBack()">Back</button>
         <!-- <button class="btn btn-outline-warning me-2" (click)="makePDF()">⬇️ Download PDF</button> -->
     </div>
@@ -257,20 +300,23 @@
 <div class="modal fade" id="sendSMSModal" tabindex="-1" aria-labelledby="sendSMSModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body">               
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12 mt-3 form-group">
                         <h4 style="color: #FF0088;">Mobile Number</h4>
-                        <input type="tel" class="form-control fs-3" [(ngModel)]="mobileNumber" maxlength="8" minlength="8" />                                                
+                        <input type="tel" class="form-control fs-3" [(ngModel)]="mobileNumber" maxlength="8"
+                            minlength="8" />
                     </div>
                     <div class="col-md-6 text-center mt-4">
-                        <button type="button" class="btn btn-outline-danger w-100 fs-5" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-danger w-100 fs-5"
+                            data-bs-dismiss="modal">Cancel</button>
                     </div>
                     <div class="col-md-6 text-center mt-4">
-                        <button type="submit" class="btn btn-outline-success w-100 fs-5" (click)="sendSMS()">Send</button>
-                    </div>                    
+                        <button type="submit" class="btn btn-outline-success w-100 fs-5"
+                            (click)="sendSMS()">Send</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+</div>

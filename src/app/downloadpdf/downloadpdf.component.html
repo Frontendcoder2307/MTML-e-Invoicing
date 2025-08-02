@@ -2,7 +2,8 @@
     <div class="row my-3 justify-content-center">
 
         <div class="text-center my-5" *ngIf="ShowSpinner">
-            <div class="spinner-border" style="background-color: var(--card-color);color: var(--brand-color);" role="status">
+            <div class="spinner-border" style="background-color: var(--card-color);color: var(--brand-color);"
+                role="status">
             </div>
         </div>
 
@@ -11,16 +12,17 @@
         <ng-template #recordBlock>
             <div class="col-10" *ngIf="!ShowSpinner">
                 <div class="border border-secondary-subtle rounded-4 overflow-hidden mt-3" id="content">
-            
+
                     <!-- Header with Brand Color -->
                     <div class="container py-2 border-bottom">
                         <div class="row align-items-center text-center text-md-start">
-            
+
                             <!-- Company Logo (Left on large, top on small) -->
                             <div class="col-12 col-md-3 mb-1 mb-md-0">
-                                <img src="/assets/images/MTML.jpg" alt="Company Logo" class="img-fluid" style="max-height: 60px;">
+                                <img src="/assets/images/MTML.jpg" alt="Company Logo" class="img-fluid"
+                                    style="max-height: 60px;">
                             </div>
-            
+
                             <!-- Company Info (Centered) -->
                             <div class="col-12 col-md-6 text-center">
                                 <h5 class="fw-bold mb-1">MAHANAGAR TELEPHONE (MAURITIUS) LTD</h5>
@@ -31,35 +33,42 @@
                                     <strong>Web:</strong> <a href="http://www.chili.mu" target="_blank">www.chili.mu</a>
                                 </p>
                             </div>
-            
+
                             <!-- Optional QR/Stamp Image (Right) -->
                             <div class="col-12 col-md-3 mt-1 mt-md-0 text-md-end">
-                                <img src="/assets/images/chililogo.jpg" alt="QR Code" class="img-fluid" style="max-height: 60px;">
+                                <img src="/assets/images/chililogo.jpg" alt="QR Code" class="img-fluid"
+                                    style="max-height: 60px;">
                             </div>
                         </div>
                     </div>
-            
+
                     <div class="p-4 text-dark">
-            
+
                         <!-- Seller & Buyer Info -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <h5 class="fw-semibold">{{ invoice.sellerName }}</h5>
                                 <div class="small text-muted">
-                                    <p class="mb-1">{{ invoice.sellerbusinessAddr }}</p>
+                                    <!-- <p class="mb-1">{{ invoice.sellerbusinessAddr }}</p> -->
                                     <p class="mb-1">BRN: {{ invoice.sellerBrn }}</p>
                                     <p class="mb-1">TAN: {{ invoice.sellerTan }}</p>
+                                    <p class="mb-1">VAT ID: VAT{{ invoice.sellerTan }}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 text-md-end">
-                                <p class="mb-1"><strong>Issued:</strong> {{ invoice.dateTimeInvoiceIssued.split(' ')[0] }}</p>
+                                <p class="mb-1"><strong>Issue Date:</strong> {{ invoiceIssueDate |date:'dd/MM/yyyy'}}</p>
+                                <p class="mb-1"><strong>Invoice Type:</strong> {{ invoice.invoiceTypeDesc || '' }}</p>
                                 <p class="mb-1"><strong>Invoice ID:</strong> {{invoice.invoiceIndentifier}}</p>
+                                <p class="mb-1" *ngIf="invoiceRefNumber != null"><strong>Invoice Ref
+                                        ID:</strong>{{invoiceRefNumber}}</p>
                                 <p class="mb-1"><strong>Transaction:</strong> {{ invoice.txnType }}</p>
                                 <p class="mb-1"><strong>IRN:</strong> {{ IRN || '' }}</p>
                                 <p class="mb-1"><strong>Status:</strong>
-                                    <span class="badge rounded-pill text-bg-success ms-3" *ngIf="this.status=='SUCCESS'">{{status}}
+                                    <span class="badge rounded-pill text-bg-success ms-3"
+                                        *ngIf="this.status=='SUCCESS'">{{status}}
                                     </span>
-                                    <span class="badge rounded-pill text-bg-warning" *ngIf="this.status=='PENDING'">{{status}}
+                                    <span class="badge rounded-pill text-bg-warning"
+                                        *ngIf="this.status=='PENDING'">{{status}}
                                     </span>
                                     <span class="badge rounded-pill text-bg-danger"
                                         *ngIf="this.status=='FAILED' || invoice.status=='REJECTED'">{{status}}
@@ -67,35 +76,49 @@
                                 </p>
                             </div>
                         </div>
-            
+
                         <!-- Buyer Info -->
                         <div class="row mb-4">
                             <div class="col-md-6">
                                 <h6 class="fw-bold">Bill To</h6>
+                                <ng-container *ngIf="invoice.reasonStated.split('~')[1] !=0">
+                                    <p class="text-muted small mb-1">Account Id:{{ invoice.reasonStated.split('~')[1]|| 'N/A' }}</p>
+                                </ng-container>
                                 <p class="mb-1">{{ invoice.buyerName }}</p>
                                 <ng-container *ngIf="invoice.buyerbusinessAddr !='N/A' || invoice.buyerbusinessAddr ">
                                     <p class="text-muted small mb-1">{{ invoice.buyerbusinessAddr }}</p>
                                 </ng-container>
-            
+
                                 <p class="text-muted small mb-1">Type: {{ invoice.buyerType }}</p>
                                 <ng-container *ngIf="invoice.buyerBrn">
                                     <p class="text-muted small mb-1">BRN: {{ invoice.buyerBrn }}</p>
                                 </ng-container>
-            
+
                                 <ng-container *ngIf="invoice.buyerTan">
                                     <p class="text-muted small mb-1">VAT No: {{ invoice.buyerTan }}</p>
                                 </ng-container>
-            
+
                                 <ng-container *ngIf="invoice.buyerNic">
                                     <p class="text-muted small mb-0">NIC: {{ invoice.buyerNic }}</p>
                                 </ng-container>
-            
+
                                 <ng-container *ngIf="invoice.buyerMsisdn && invoice.buyerMsisdn.length>=8">
                                     <p class="text-muted small mb-0">Contact Number: {{ invoice.buyerMsisdn }}</p>
                                 </ng-container>
                             </div>
+                            <div class="col-md-6">
+                                <div class="text-center">
+                                    <ng-container *ngIf="QRCode !=''">
+                                        <img [src]=QRCode alt="QR Code" width="120" class="border rounded-3">
+                                        <p class="text-muted small">Generated by MRA</p>
+                                    </ng-container>
+                                    <ng-template *ngIf="QRCode ==''">
+                                        <p class="text-muted fst-italic">QR Code not available.</p>
+                                    </ng-template>
+                                </div>
+                            </div>
                         </div>
-            
+
                         <!-- Product Table -->
                         <div class="table-responsive mb-4">
                             <table class="table table-bordered rounded-3 overflow-hidden">
@@ -103,29 +126,31 @@
                                     <tr>
                                         <th style="color: #121821 !important">#</th>
                                         <th style="color: #121821 !important">Item Type</th>
-                                        <th style="color: #121821 !important">Description</th>
-                                        <th style="color: #121821 !important" class="text-center">Qty</th>
-                                        <th style="color: #121821 !important" class="text-end">Unit Price <small>(MUR)</small></th>
-                                        <th style="color: #121821 !important" class="text-end">Total <small>(MUR)</small></th>
+                                        <th style="color: #121821 !important" >Description/Call or SMS Count </th>
+                                        <th style="color: #121821 !important" class="text-center" *ngIf="this.invoice.products[0].quantity!=0">Qty/Total Mins</th>
+                                        <th style="color: #121821 !important" class="text-end">{{unitPriceHeading}}<small>(Rs.)</small></th>
+                                        <th style="color: #121821 !important" class="text-end" *ngIf="invoice.totalVatAmount != 0">VAT Amt</th>
+                                        <th style="color: #121821 !important" class="text-end">Total <small>(Rs.)</small></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let p of invoice.products; let i = index">
                                         <td style="background-color: #FEFEFE;">{{ i + 1 }}</td>
-                                        <td style="background-color: #FEFEFE;">{{ p.itemDesc.split("-")[0].split(' ')[0]+"
-                                            "+p.itemDesc.split("-")[0].split(' ')[1]}}</td>
-                                        <td style="background-color: #FEFEFE;">{{ p.itemDesc.split('-')[1] }}</td>
-                                        <td class="text-center" style="background-color: #FEFEFE;">{{ p.quantity }}</td>
-                                        <td class="text-end" style="background-color: #FEFEFE;">{{ p.unitPrice | number:'1.2-2' }}
-                                        </td>
-                                        <td class="text-end" style="background-color: #FEFEFE;">{{ p.quantity * p.unitPrice |
+                                        <td style="background-color: #FEFEFE;">{{ p.itemDesc.split("~")[0]}}</td>
+                                        <td style="background-color: #FEFEFE;">{{ p.itemDesc.split("~")[1] }}</td>
+                                        <td class="text-center" style="background-color: #FEFEFE;" *ngIf="this.invoice.products[0].quantity!=0">{{ p.quantity }}</td>
+                                        <td class="text-end" style="background-color: #FEFEFE;">{{ p.unitPrice |
                                             number:'1.2-2' }}
                                         </td>
+                                        <td class="text-end" style="background-color: #FEFEFE;" *ngIf="invoice.totalVatAmount != 0">{{ p.vatAmt |
+                                            number:'1.2-2' }}</td>
+                                        <td class="text-end" style="background-color: #FEFEFE;">{{ p.totalPrice | number:'1.2-2' }}</td>
+                                        
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-            
+
                         <!-- Calculation Table -->
                         <div class="table-responsive mb-4">
                             <table class="table table-bordered rounded-3 overflow-hidden text-center">
@@ -137,25 +162,47 @@
                                         <th style="color: #121821 !important">Previous Balance <small>(MUR)</small></th>
                                         <th style="color: #121821 !important">Total <small>(MUR)</small></th>
                                         <th style="color: #121821 !important">Paid (MUR)</th>
+                                        <th style="color: #121821 !important">Post Balance <small>(Rs.)</small></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style="background-color: #FEFEFE;">{{ InvoiceTotal | number:'1.2-2'}}</td>
-                                        <td style="background-color: #FEFEFE;"> {{ invoice.totalVatAmount| number:'1.2-2' }}</td>
-                                        <td style="background-color: #FEFEFE;"> - {{ invoice.discountTotalAmount || 0.00 |
+                                        <td style="background-color: #FEFEFE;">{{ invoice.invoiceTotal | number:'1.2-2'}}</td>
+                                        <td style="background-color: #FEFEFE;"> {{ invoice.totalVatAmount|
+                                            number:'1.2-2' }}</td>
+                                        <td style="background-color: #FEFEFE;"> - {{ invoice.discountTotalAmount || 0.00
+                                            |
                                             number:'1.2-2' }}
                                         </td>
-                                        <td style="background-color: #FEFEFE;"> {{ previousBalance| number:'1.2-2' }}</td>
-                                        <td style="background-color: #FEFEFE;"> {{ invoice.invoiceTotal |number:'1.2-2' }}</td>
-                                        <td style="background-color: #FEFEFE;"> {{ invoice.totalAmtPaid | number:'1.2-2'}}</td>
+                                        <td style="background-color: #FEFEFE;"> {{ previousBalance.split("~")[0] | number:'1.2-2' }}</td>
+                                        <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc!='CRN'"> {{ invoice.invoiceTotal |number:'1.2-2'
+                                            }}</td>
+                                        <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc=='CRN'"> -{{ invoice.invoiceTotal |number:'1.2-2'
+                                            }}
+                                        </td>
+                                        <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc!='CRN'"> {{ invoice.totalAmtPaid |
+                                            number:'1.2-2'}}</td>
+                                        <td style="background-color: #FEFEFE;" *ngIf="invoice.invoiceTypeDesc=='CRN'"> -{{ invoice.totalAmtPaid |
+                                            number:'1.2-2'}}
+                                        </td>
+                                        <td style="background-color: #FEFEFE;"> {{ previousBalance.split("~")[1] || 0.00 | number:'1.2-2' }}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
+                        <div class="row">
+                            <div class="col-mb-12"
+                                *ngIf="invoice.surchargeAmount > 0 && invoice.invoiceDueDate != null">
+                                <small><b class="text-danger">*NOTE:&nbsp;</b><label>The surcharge (@10%) will be
+                                        applicable for any payment made after due date: <b>{{invoiceDueDate |
+                                            date:'dd/MM/yyyy'}}</b> and amount will be <b> Rs.{{invoice.surchargeAmount | number:'1.2-2'}}</b>
+                                        </label>
+                                </small>
+                            </div>
+                        </div>
                         <!-- Totals Section -->
                         <div class="row justify-content-end">
-                            <div class="col-12 text-start ">
+                            <!-- <div class="col-12 text-start ">
                                 <div class="text-center">
                                     <ng-container *ngIf="QRCode !=''">
                                         <img [src]=QRCode alt="QR Code" width="120">
@@ -165,9 +212,9 @@
                                         <p class="text-muted fst-italic">QR Code not available.</p>
                                     </ng-template>
                                 </div>
-                            </div>
-            
-            
+                            </div> -->
+
+
                             <!-- <div class="col-md-5">
                                             <table class="table table-borderless">
                                                 <tr>
@@ -212,7 +259,7 @@
                                             </table>
                                         </div> -->
                         </div>
-            
+
                         <!-- QR Code -->
                         <!-- <div class="text-center my-4">
                                                             <ng-container *ngIf="QRCode !=''">
@@ -223,23 +270,23 @@
                                                                 <p class="text-muted fst-italic">QR Code not available.</p>
                                                             </ng-template>
                                                         </div> -->
-            
+
                         <!-- Footer Notes -->
                         <div class="border-top pt-3 text-muted small">
-                            <p><strong>Note:</strong> {{ invoice.reasonStated || 'Thank you for your business.' }}</p>
+                            <p><strong>Note:</strong> {{ invoice.reasonStated.split('~')[0]|| 'Thank you for your business.' }}</p>
                             <p class="mb-0">Generated on {{ invoice.processingDateTime.split('T')[0] }}</p>
                         </div>
-            
-            
+
+
                     </div>
                 </div>
-                </div>
-                <!-- Action Buttons -->
-                <div class="text-end my-4 no-print" *ngIf="!ShowSpinner">
-                    <button class="btn btn-outline-warning me-2" (click)="printInvoice()">Download</button>
-                    <button class="btn btn-outline-warning me-2" (click)="goBack()">Exit</button>
-                    <!-- <button class="btn btn-outline-warning me-2" (click)="makePDF()">⬇️ Download PDF</button> -->
-                </div>
+            </div>
+            <!-- Action Buttons -->
+            <div class="text-end my-4 no-print" *ngIf="!ShowSpinner">
+                <button class="btn btn-outline-warning me-2" (click)="printInvoice()">Download</button>
+                <button class="btn btn-outline-warning me-2" (click)="goBack()">Exit</button>
+                <!-- <button class="btn btn-outline-warning me-2" (click)="makePDF()">⬇️ Download PDF</button> -->
+            </div>
         </ng-template>
         <ng-template #recorderrorBlock>
             <div class=" border border-secondary-subtle rounded-4 overflow-hidden shadow row mt-5" *ngIf="!ShowSpinner">
@@ -248,11 +295,8 @@
                 </div>
             </div>
         </ng-template>
-        
+
 
     </div>
 
 </div>
-
-
-
